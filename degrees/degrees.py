@@ -83,7 +83,6 @@ def main():
             movie = movies[path[i + 1][0]]["title"]
             print(f"{i + 1}: {person1} and {person2} starred in {movie}")
 
-
 def shortest_path(source, target):
     """
     Returns the shortest list of (movie_id, person_id) pairs
@@ -91,45 +90,28 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
-    
-    # Set of visited nodes to prevent loops
-    start_node = Node(source, None, None)
+    start = Node(source, None, None)
     queue = QueueFrontier()
-    queue.add(start_node)
-    
+    queue.add(start)
     visited = set()
-
-    while True:
-        #None if queue empty
-        if queue.empty():
-            return None
-        else:
-            current_node = queue.remove()
-            visited.add(current_node.state)
-            
-        for action, state in neighbors_for_person(current_node.state):
-            #Returning a path if solution is found
-            if state == target:
-                # Creating Path to Target
-                path = []
-                path.append((action, state))
-
-                while current_node.parent != None:
-                    path.append((current_node.action, current_node.state))
-                    current_node = current_node.parent
-                    
-                #reverse the path bring start to the front
-                path.reverse()
-
-                #Returning path
-                return path
+    
+    while not queue.empty():
+        current = queue.remove()
+        visited.add(current.state)
         
-            # Otherwise add the new states to explore to the queue:
-            elif not queue.contains_state(state) and state not in visited:
-                new_node = Node(state, current_node, action)
-                queue.add(new_node)
+        for action, state in neighbors_for_person(current.state):
+            if state == target:
+                path = [(action, state)]
+                while current.parent is not None:
+                    current, action = current.parent, current.action
+                    path.append((action, current.state))
+                path.reverse()
+                return path
+            
+            if not queue.contains_state(state) and state not in visited:
+                queue.add(Node(state, current, action))
+    return None
                 
-
 def person_id_for_name(name):
     """
     Returns the IMDB id for a person's name,

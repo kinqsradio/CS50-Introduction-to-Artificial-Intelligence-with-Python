@@ -60,38 +60,16 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    
-    """
-    Horizontal + Vertical Checking
-    """
     for i in range(len(board)):
        if board[i][0] == board[i][1] == board[i][2]:
-           if board[i][0] == X:
-               return X
-           elif board[i][0] == O:
-               return O       
+           return board[i][0]
     for j in range(len(board)):
        if board[0][j] == board[1][j] == board[2][j]:
-           if board[0][j] == X:
-               return X
-           elif board[0][j] == O:
-               return O
-    """
-    Diagonals Checking
-    """    
+           return board[0][j]
     if board[0][0] == board[1][1] == board[2][2]:
-        if board[0][0] == X:
-            return X
-        elif board[0][0] == O:
-            return O
+        return board[0][0]
     if board[2][0] == board[1][1] == board[0][2]:
-        if board[2][0] == X:
-            return X
-        elif board[2][0] == O:
-            return O
-    """
-    No winner
-    """    
+        return board[2][0]
     return None
 
 def terminal(board):
@@ -135,8 +113,6 @@ def minimax(board):
             value, move = minvalue(board)
             return move
 
-
-
 def minvalue(board):
     if terminal(board):
         return utility(board), None
@@ -164,3 +140,6 @@ def maxvalue(board):
             value = v
             move = action
     return value, move
+
+
+
