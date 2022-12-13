@@ -11,47 +11,44 @@ CKnave = Symbol("C is a Knave")
 
 #Note: Speak by a knave is always false so therefore should be using Not for what they says
 
-#Possible statements for A,B and C
-XORA = And(Or(AKnight, AKnave), Not(And(AKnight, AKnave))) #AKnight or AKnave but cannot be both
-XORB = And(Or(BKnight, BKnave), Not(And(BKnight, BKnave))) #BKnight or BKnave but cannot be both
-XORC = And(Or(CKnight, CKnave), Not(And(CKnight, CKnave))) #CKnight or CKnave but cannot be both
-
+#Possible Statement for A B C
+#A = Knight if A != Knave
+#B = Knight if B != Knave
+#C = Knight if C != Knave
+XORA = Biconditional(AKnight, Not(AKnave))
+XORB = Biconditional(BKnight, Not(BKnave))
+XORC = Biconditional(CKnight, Not(CKnave))
 
 # Puzzle 0
 # A says "I am both a knight and a knave."
-ASays = And(AKnight,AKnave) #Both knight and knave
 knowledge0 = And(
     # TODO
     XORA,
-    Implication(AKnight,ASays),
-    Implication(AKnave,Not(ASays))
+    #A = Knight if A = Knight and A = Knave
+    Biconditional(AKnight, And(AKnight, AKnave)),
+    
 )
 
 # Puzzle 1
 # A says "We are both knaves."
 # B says nothing.
-ASays = And(AKnave,BKnave) #A and B are both knaves
 knowledge1 = And(
     # TODO
-    XORA, 
-    XORB,
-    Implication(AKnight, ASays),
-    Implication(AKnave, Not(ASays)),
+    XORA, XORB,
+    #A = Knight if A,B = Knave
+    Biconditional(AKnight,And(AKnave,BKnave)),
 )
 
 # Puzzle 2
 # A says "We are the same kind."
 # B says "We are of different kinds."
-ASays = Or(And(AKnight, BKnight), And(AKnave,BKnave)) #Same kind Knight or Knave
-BSays = Or(And(AKnight, BKnave), And(AKnave, BKnight)) #Of different kinds
 knowledge2 = And(
     # TODO
-    XORA,
-    XORB,
-    Implication(AKnight, ASays),
-    Implication(AKnave, Not(ASays)),
-    Implication(BKnight, BSays),
-    Implication(BKnave, Not(BSays)),
+    XORA, XORB,
+    #A = Knight if A & B = Knight or A & B = Knave
+    Biconditional(AKnight, Or(And(AKnight, BKnight),And(AKnave,BKnave))),
+    #B = Knight if A != B
+    Biconditional(BKnight, Not(AKnight)),
 )
 
 # Puzzle 3
@@ -61,13 +58,15 @@ knowledge2 = And(
 # C says "A is a knight."
 knowledge3 = And(
     # TODO
-    XORA,
-    XORB,
-    XORC,
-    Or(Biconditional(AKnight, AKnight), Biconditional(AKnight,AKnave)), #A is a knight if "I am a knight" or "I am a knave" is true
-    Biconditional(BKnight, Biconditional(AKnight, AKnave)), #B is a knighht if "A said 'I am a knave'." is true
-    Biconditional(BKnight,CKnave), #If B is a Knight, "C is a knave" is true
-    Biconditional(CKnight,AKnight), #If C is a Knight, "A is a knight" is true
+    XORA, XORB,XORC,
+    #A = Knight or A = Knave
+    Or(Biconditional(AKnight, AKnight), Biconditional(AKnave,AKnave)),
+    #B = Knight if A = Knave
+    Biconditional(BKnight, Biconditional(AKnight,AKnave)),
+    #B = Knight if C = Knave
+    Biconditional(BKnight, CKnave),
+    #C = Knight if A = Knight
+    Biconditional(CKnight,AKnight),
 )
 
 
