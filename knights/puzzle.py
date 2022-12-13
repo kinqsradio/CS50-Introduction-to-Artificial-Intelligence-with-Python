@@ -59,8 +59,8 @@ knowledge2 = And(
 knowledge3 = And(
     # TODO
     XORA, XORB,XORC,
-    #A = Knight or A = Knave
-    Or(Biconditional(AKnight, AKnight), Biconditional(AKnave,AKnave)),
+    #A = Knight if A + Knight or A = Knave
+    Or(AKnight,AKnave),
     #B = Knight if A != Knight
     Biconditional(BKnight, Not(Biconditional(AKnight, AKnight))),
     #B = Knight if C = Knave
